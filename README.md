@@ -45,4 +45,54 @@ $requiredModules | ForEach-Object {
 }
 #endregion
 ```
-In the next sections, we will see the second one which is about defining routes for modules/functions. 
+### Authentication
+In the example below, there are 3 types of authentications:
+- Bearer authentications are used by different endpoints which need admin or developer level access. 
+- Basic authentication is for OpenAPI which will allow users to try out functions via swagger.
+
+```sh
+New-PodeAuthType -Bearer -Scope "dev" | Add-PodeAuth -Name 'Dev-Auth' -ScriptBlock {
+    param($token)
+    # here you'd check a real storage, this is just for example
+    if ($token -eq 'dev-token') {
+        return @{
+            User = @{
+                'Name' = 'Guest'
+                'Type' = 'Developer'
+            }
+            Scope = 'dev'
+        }
+    }
+    return $null
+}
+New-PodeAuthType -Bearer -Scope "admin" | Add-PodeAuth -Name 'Admin-Auth' -ScriptBlock {
+    param($token)
+    # here you'd check a real storage, this is just for example
+    if ($token -eq 'admin-token') {
+        return @{
+            User = @{
+                'Name' = 'Cansin'
+                'Type' = 'Admin'
+            }
+            Scope = 'admin'
+        }
+    }
+    return $null
+}
+New-PodeAuthType -Basic | Add-PodeAuth -Name 'OpenAPI' -ScriptBlock {
+    param($username, $password)
+
+    # here you'd check a real user storage, this is just for example
+    if ($username -eq 'evde' -and $password -eq 'kal') {
+        return @{
+            User = @{
+                Name = 'admin'
+                Type = 'openAPI'
+            }
+        }
+    }
+
+    # aww geez! no user was found
+    return @{ Message = 'Invalid details supplied' }
+}
+```
