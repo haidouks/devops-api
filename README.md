@@ -1,6 +1,6 @@
 # DevOps API
 DevOps API is a web server which hosts exported functions in powershell modules as Rest APIs using Pode framework. 
-This project is a demonstration for automatically converting Powershell Modules to rest services and making DevOps scripts available for everyone.
+This project is a demonstration for automatically converting Powershell Modules to rest services and making DevOps scripts simply available for everyone.
 
 ### How to start ?
 
