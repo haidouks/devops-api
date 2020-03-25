@@ -91,8 +91,19 @@ New-PodeAuthType -Basic | Add-PodeAuth -Name 'OpenAPI' -ScriptBlock {
             }
         }
     }
-
-    # aww geez! no user was found
     return @{ Message = 'Invalid details supplied' }
 }
+```
+### Routes
+```sh
+#region Gitlab
+ConvertTo-PodeRoute -Module Gitlab -Path "/api" -Verbose -Commands @("Get-GitlabGroups")
+ConvertTo-PodeRoute -Module Gitlab -Path "/api" -Verbose -Commands @("New-GitlabProject") -Middleware @(
+    (Get-PodeAuthMiddleware -Name 'Dev-Auth' -Sessionless), 
+    (Get-PodeAuthMiddleware -Name 'Admin-Auth' -Sessionless) 
+)
+ConvertTo-PodeRoute -Module Gitlab -Path "/api" -Verbose -Commands @("New-GitlabGroup") -Middleware (
+    Get-PodeAuthMiddleware -Name 'Admin-Auth' -Sessionless
+)
+#endregion
 ```
