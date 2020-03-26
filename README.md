@@ -1,5 +1,5 @@
 # DevOps API
-DevOps API is a web server which hosts exported functions in powershell modules as Rest APIs using Pode framework. 
+DevOps API is a web server which hosts exported functions in powershell modules as Rest APIs using [Pode framework](https://badgerati.github.io/Pode/). 
 This project is a demonstration for automatically converting Powershell Modules to rest services and making DevOps scripts simply available for everyone.
 
 ### How to start ?
@@ -97,6 +97,7 @@ New-PodeAuthType -Basic | Add-PodeAuth -Name 'OpenAPI' -ScriptBlock {
 ### Routes
 Last step is defining routes. Like Python Flask, routes assign URLs in our app to functions easily.Pode is a very capable framework and one of them is automatically creating routes for functions. 
 Depending the verb part of function, Pode sets the method type. And if the method type is GET (Get-\*, ...), created route accepts function parameters as query string or if it is a POST or PUT method (New-\* , Set-\*, Update-\*, ...) routes gets parameters from the body automatically. 
+
 You can find detailed information about routes in the [pode documentation](https://badgerati.github.io/Pode/Tutorials/Routes/Utilities/FunctionsAndModules/).
 
 ```sh
@@ -111,3 +112,18 @@ ConvertTo-PodeRoute -Module Gitlab -Path "/api" -Verbose -Commands @("New-Gitlab
 )
 #endregion
 ```
+
+In the example above, I defined different authentication types for each function but actually if you don't care authentication or different authentication types, you can just publish all of your module functions in one line as below:
+```sh
+ConvertTo-PodeRoute -Module Gitlab -Path "/api"
+```
+
+### Swagger
+Exported module functions can be executed or explored via Swagger. To enable it, you can use the code below:
+```sh
+Enable-PodeOpenApi -Path '/docs/openapi' -Title 'DevOps API' -Version 1.0.0 
+Enable-PodeOpenApiViewer -Type Swagger -Path '/docs/swagger' -DarkMode -Middleware (Get-PodeAuthMiddleware -Name "OpenAPI" -Sessionless)
+```
+If you don't care an extra authentication for your Swagger, you don't need to put middleware switch.
+![image](https://user-images.githubusercontent.com/23384662/77652232-fc704500-6f7e-11ea-8ec1-1489d02679b0.png)
+
