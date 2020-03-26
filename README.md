@@ -95,6 +95,10 @@ New-PodeAuthType -Basic | Add-PodeAuth -Name 'OpenAPI' -ScriptBlock {
 }
 ```
 ### Routes
+Last step is defining routes. Like Python Flask, routes assign URLs in our app to functions easily.Pode is a very capable framework and one of them is automatically creating routes for functions. 
+Depending the verb part of function, Pode sets the method type. And if the method type is GET (Get-\*, ...), created route accepts function parameters as query string or if it is a POST or PUT method (New-\* , Set-\*, Update-\*, ...) routes gets parameters from the body automatically. 
+You can find detailed information about routes in the [pode documentation](https://badgerati.github.io/Pode/Tutorials/Routes/Utilities/FunctionsAndModules/).
+
 ```sh
 #region Gitlab
 ConvertTo-PodeRoute -Module Gitlab -Path "/api" -Verbose -Commands @("Get-GitlabGroups")
